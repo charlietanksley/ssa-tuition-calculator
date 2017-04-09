@@ -34,6 +34,7 @@ ui <- fluidPage(theme = shinytheme("journal"),
    # Sidebar with a slider input for number of bins 
    sidebarLayout(
       sidebarPanel(
+        h2('Enter Your information'),
          selectInput("income",
                      "Net Income:",
                       choices = tuition_data$income_range),
@@ -53,7 +54,8 @@ ui <- fluidPage(theme = shinytheme("journal"),
       # Show a plot of the generated distribution
       mainPanel(
         h2('Base tuition'),
-        p(textOutput('full_tuition')),
+        p(textOutput('base_tuition_blurb'),
+          textOutput('full_tuition')),
         h2('With Tuition Assistance'),
         p(textOutput("tuition"))
       )
@@ -132,12 +134,16 @@ server <- function(input, output) {
     }
   })
   
+  output$base_tuition_blurb <- renderText({
+    paste0('For ', input$children, kids(), ' attending Sudbury School of Atlanta ', input$days, ' days a week, base tuition is ')
+  })
+  
   output$full_tuition <- renderText({
-    paste0('For ', input$children, kids(), ' attending Sudbury School of Atlanta ', input$days, ' days a week, base tuition is ', base_tuition())
+    base_tuition()
   })
   
   output$tuition <- renderText({
-    paste0('For ', input$children, kids(), ' attending Sudbury School of Atlanta ', input$days, ' days a week, your total tuition is ', calculate_tuition())
+    calculate_tuition()
   })
 }
 
