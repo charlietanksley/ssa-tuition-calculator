@@ -9,6 +9,7 @@
 
 library(shiny)
 library(dplyr)
+library(shinythemes)
 
 tuition_data = data.frame(
   income = c(10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000, 110000, 120000, 130000, 140000),
@@ -18,13 +19,14 @@ tuition_data = data.frame(
 tuition_data = mutate(tuition_data,
                       base_per_day = price / 5)
 
-tuition_cap_data = data.frame(
+tuition_adjustment = data.frame(
   days = c(1, 2, 3, 4, 5),
-  cap = c(1, 1, 1, 1, 8000)
+  full_tuition = c(2000, 3840, 5520, 7040, 8000),
+  percent_increase = c(1.25, 1.20, 1.15, 1.10, 1)
 )
 
 tuition_data
-ui <- fluidPage(
+ui <- fluidPage(theme = shinytheme("journal"),
    
    # Application title
    titlePanel("Sudbury Tuition Calculator"),
@@ -50,7 +52,8 @@ ui <- fluidPage(
       
       # Show a plot of the generated distribution
       mainPanel(
-         textOutput("tuition")
+        h2('Your Tuition:'),
+        h3(textOutput("tuition"))
       )
    )
 )
@@ -58,11 +61,18 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   tuition <- function() {
-    tuition = filter(tuition_data, income_range == input$income)$price
+    tuition_row = filter(tuition_data, income_range == input$income)
+    #tuition_row$price
+    
+    round(tuition_row$base_per_day * adjustment()$percent_increase * input$days, 0)
+  }
+  
+  adjustment <- function() {
+    filter(tuition_adjustment, days == input$days)
   }
   
   tuition_cap <- function() {
-    filter(tuition_cap_data, days == input$days)$cap
+    adjustment()$full_tuition
   }
   
   single_tuition <- function() {
@@ -100,8 +110,7 @@ server <- function(input, output) {
         }
       }
     }
-    #cap_tuition(total_tuition)
-    total_tuition
+    paste0('$', total_tuition)
   })
   
   output$tuition <- renderText({
