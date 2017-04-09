@@ -52,8 +52,10 @@ ui <- fluidPage(theme = shinytheme("journal"),
       
       # Show a plot of the generated distribution
       mainPanel(
-        h2('Your Tuition:'),
-        h3(textOutput("tuition"))
+        h2('Base tuition'),
+        p(textOutput('full_tuition')),
+        h2('With Tuition Assistance'),
+        p(textOutput("tuition"))
       )
    )
 )
@@ -113,9 +115,30 @@ server <- function(input, output) {
     paste0('$', total_tuition)
   })
   
+  base_tuition <- reactive({
+    total_tuition =  0
+    for (i in 1:input$children) {
+      total_tuition = total_tuition + adjustment()$full_tuition
+    }
+    
+    paste0('$', total_tuition)
+  })
+  
+  kids <- reactive({
+    if (input$children > 1) {
+      return(' children')
+    } else {
+      return(' child')
+    }
+  })
+  
+  output$full_tuition <- renderText({
+    paste0('For ', input$children, kids(), ' attending Sudbury School of Atlanta ', input$days, ' days a week, base tuition is ', base_tuition())
+  })
+  
   output$tuition <- renderText({
-    calculate_tuition()
-    })
+    paste0('For ', input$children, kids(), ' attending Sudbury School of Atlanta ', input$days, ' days a week, your total tuition is ', calculate_tuition())
+  })
 }
 
 # Run the application 
