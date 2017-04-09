@@ -57,8 +57,12 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-  single_tuition <- function() {
+  tuition <- function() {
     tuition = filter(tuition_data, income_range == input$income)$price
+  }
+  
+  single_tuition <- function() {
+    tuition = tuition()
     cap = filter(tuition_cap, days == input$days)$cap
     
     if (tuition > cap) {
@@ -68,13 +72,17 @@ server <- function(input, output) {
     tuition  
   }
   
+  additional_tuition <- function() {
+    tuition() / 2
+  }
+  
   calculate_tuition <- reactive({
     total_tuition = single_tuition()
-    # for (i in 1:input$children) {
-    #   total_tuition = total_tuition + tuition_for_child(i)
-    #   print(total_tuition)
-    # }
-    # 
+    if (input$children > 1) {
+      for (i in 2:input$children) {
+        total_tuition = total_tuition + additional_tuition()
+      }
+    }
     #cap_tuition(total_tuition)
     total_tuition
   })
