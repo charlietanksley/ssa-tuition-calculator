@@ -29,7 +29,7 @@ tuition_data
 ui <- fluidPage(theme = shinytheme("journal"),
    
    # Application title
-   titlePanel("Sudbury Tuition Calculator"),
+   titlePanel("Sudbury School of Atlanta Tuition Calculator"),
    
    # Sidebar with a slider input for number of bins 
    sidebarLayout(
@@ -37,7 +37,8 @@ ui <- fluidPage(theme = shinytheme("journal"),
         h2('Enter Your information'),
          selectInput("income",
                      "Net Income:",
-                      choices = tuition_data$income_range),
+                      choices = tuition_data$income_range,
+                     selected = '100,000 - 109,999'),
          numericInput("days",
                       "Days Per Week:",
                       value = 5,
@@ -53,14 +54,24 @@ ui <- fluidPage(theme = shinytheme("journal"),
       
       # Show a plot of the generated distribution
       mainPanel(
-        h2('Base tuition'),
-        p(textOutput('base_tuition_blurb'),
-          textOutput('full_tuition')),
-        h2('With Tuition Assistance'),
-        p(textOutput("tuition"))
+        fluidRow(column(width = 6,
+                        h2('Base tuition'),
+                        p(textOutput('base_tuition_blurb')),
+                        tags$div(style = 'font-size: 3em; color: green; text-align: center;',
+                          p(textOutput('full_tuition')))),
+                 column(width = 6, style = 'border-left: 1px solid gray',
+                        h2('With tuition assistance'),
+                        p(textOutput('tuition_assistance_blurb')),
+                        tags$div(style = 'font-size: 3em; color: green; text-align: center;',
+                          p(textOutput('tuition'))))
+                   
+                 ),
+        hr(),
+        HTML("<p>Back to <a href='http://sudburyschoolofatlanta.org'>Sudbury School of Atlanta's main page</a><p>")
       )
    )
 )
+
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
@@ -135,7 +146,11 @@ server <- function(input, output) {
   })
   
   output$base_tuition_blurb <- renderText({
-    paste0('For ', input$children, kids(), ' attending Sudbury School of Atlanta ', input$days, ' days a week, base tuition is ')
+    paste0('For ', input$children, kids(), ' attending Sudbury School of Atlanta ', input$days, ' days a week, base annual tuition is')
+  })
+  
+  output$tuition_assistance_blurb <- renderText({
+    paste0('For ', input$children, kids(), ' attending Sudbury School of Atlanta ', input$days, ' days a week, YOUR annual tuition is')
   })
   
   output$full_tuition <- renderText({
