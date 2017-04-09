@@ -18,10 +18,10 @@ tuition_data = data.frame(
 tuition_data = mutate(tuition_data,
                       base_per_day = price / 5)
 
-# max_tuition = data.frame(
-#   days = c(1, 2, 3, 4, 5),
-#   price = c(1, 1, 1, 1, 1600)
-# )
+tuition_cap = data.frame(
+  days = c(1, 2, 3, 4, 5),
+  cap = c(1, 1, 1, 1, 8000)
+)
 
 tuition_data
 ui <- fluidPage(
@@ -57,16 +57,26 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-  calculate_tuition <- reactive({
-    tuition_band = filter(tuition_data, income_range == input$income)
+  single_tuition <- function() {
+    tuition = filter(tuition_data, income_range == input$income)$price
+    cap = filter(tuition_cap, days == input$days)$cap
     
-    tuition_per_year = tuition_band$base_per_day * input$days
-    
-    if (tuition_per_year > 8000) {
-      tuition_per_year = 8000
+    if (tuition > cap) {
+      return(cap)
     }
     
-    tuition_per_year
+    tuition  
+  }
+  
+  calculate_tuition <- reactive({
+    total_tuition = single_tuition()
+    # for (i in 1:input$children) {
+    #   total_tuition = total_tuition + tuition_for_child(i)
+    #   print(total_tuition)
+    # }
+    # 
+    #cap_tuition(total_tuition)
+    total_tuition
   })
   
   output$tuition <- renderText({
