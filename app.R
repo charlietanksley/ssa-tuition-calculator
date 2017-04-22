@@ -34,7 +34,7 @@ tuition_data
 ui <- fluidPage(theme = shinytheme("journal"),
    
    # Application title
-   titlePanel("Sudbury School of Atlanta Tuition Calculator"),
+   titlePanel("Sudbury School of Atlanta Monthly Tuition Assistance Calculator"),
    
    # Sidebar with a slider input for number of bins 
    sidebarLayout(
@@ -72,7 +72,7 @@ ui <- fluidPage(theme = shinytheme("journal"),
                    
                  ),
         hr(),
-        HTML("<p>Back to <a href='http://sudburyschoolofatlanta.org'>Sudbury School of Atlanta's main page</a><p>")
+        HTML("<p>Please ask for information about tuition assistance for the 4 year-old half-day program.</p><p>Back to <a href='http://sudburyschoolofatlanta.org'>Sudbury School of Atlanta's main page</a><p>")
       )
    )
 )
@@ -83,8 +83,9 @@ server <- function(input, output) {
   tuition <- function() {
     tuition_row = filter(tuition_data, income_range == input$income)
     #tuition_row$price
-    
-    round(tuition_row$base_per_day * adjustment()$percent_increase * input$days, 0)
+    base_yearly_tuition = tuition_row$base_per_day * adjustment()$percent_increase * input$days
+    base_daily_tuition = base_yearly_tuition
+    round(base_daily_tuition, 0)
   }
   
   adjustment <- function() {
@@ -103,7 +104,7 @@ server <- function(input, output) {
       return(cap)
     }
     
-    tuition  
+    tuition
   }
   
   additional_tuition <- function() {
@@ -130,7 +131,7 @@ server <- function(input, output) {
         }
       }
     }
-    paste0('$', total_tuition)
+    paste0('$', total_tuition / 10)
   })
   
   base_tuition <- reactive({
@@ -139,7 +140,7 @@ server <- function(input, output) {
       total_tuition = total_tuition + adjustment()$full_tuition
     }
     
-    paste0('$', total_tuition)
+    paste0('$', total_tuition / 10)
   })
   
   kids <- reactive({
@@ -151,11 +152,11 @@ server <- function(input, output) {
   })
   
   output$base_tuition_blurb <- renderText({
-    paste0('For ', input$children, kids(), ' attending Sudbury School of Atlanta ', input$days, ' days a week, base annual tuition is')
+    paste0('For ', input$children, kids(), ' attending Sudbury School of Atlanta ', input$days, ' days a week, base monthly tuition is')
   })
   
   output$tuition_assistance_blurb <- renderText({
-    paste0('For ', input$children, kids(), ' attending Sudbury School of Atlanta ', input$days, ' days a week, YOUR annual tuition is')
+    paste0('For ', input$children, kids(), ' attending Sudbury School of Atlanta ', input$days, ' days a week, YOUR monthly tuition is')
   })
   
   output$full_tuition <- renderText({
