@@ -178,7 +178,7 @@ server <- function(input, output) {
         }
       }
     }
-    paste0('$', total_tuition / 10)
+    paste0('$', round(total_tuition / 10))
   })
   
   base_tuition <- reactive({
