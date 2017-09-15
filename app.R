@@ -70,7 +70,6 @@ income_levels = factor(c(
 
 
 tuition_data = data.frame(
-  # income = c(10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000, 110000, 120000, 130000, 140000),
   price = c(180,
             270,
             360,
@@ -97,33 +96,7 @@ tuition_data = data.frame(
             13140,
             14220,
             15110),
-  income_range = income_levels #c(
-                   # 'Under 10,000',
-                   # '10,000 - 14,999',
-                   # '15,000 - 19,999',
-                   # '20,000 - 24,999',
-                   # '25,000 - 29,999',
-                   # '30,000 - 34,999',
-                   # '35,000 - 39,999',
-                   # '40,000 - 44,999',
-                   # '45,000 - 49,999',
-                   # '50,000 - 54,999',
-                   # '55,000 - 59,999',
-                   # '60,000 - 64,999',
-                   # '65,000 - 69,999',
-                   # '70,000 - 74,999',
-                   # '75,000 - 79,999',
-                   # '80,000 - 84,999',
-                   # '85,000 - 89,999',
-                   # '90,000 - 94,999',
-                   # '95,000 - 99,999',
-                   # '100,000 - 104,999',
-                   # '105,000 - 109,999',
-                   # '110,000 - 114,999',
-                   # '115,000 - 119,999',
-                   # '120,000 - 124,999',
-                   # '125,000 - 129,999',
-                   # '130,000+')
+  income_range = income_levels
 )
 
 tuition_data = mutate(tuition_data,
@@ -141,7 +114,6 @@ tuition_adjustment_4_year = data.frame(
   full_tuition = c(1540, 2860, 3960, 4840, 5500),
   percent_increase = c(1.40, 1.30, 1.20, 1.10, 1)
 )
-
 
 
 ui <- fluidPage(theme = shinytheme("journal"),
@@ -174,7 +146,6 @@ ui <- fluidPage(theme = shinytheme("journal"),
                      "5+ Years Old (9am - 3pm)")
       ),
 
-      # Show a plot of the generated distribution
       mainPanel(
         fluidRow(column(width = 6,
                         h2('Base tuition'),
@@ -189,6 +160,7 @@ ui <- fluidPage(theme = shinytheme("journal"),
 
                  )
 
+        # Show a plot of the generated distribution
         # , p(plotOutput('tuition_scale_plot'))
       )
    )
@@ -197,11 +169,11 @@ ui <- fluidPage(theme = shinytheme("journal"),
 
 #Define server logic required to draw a histogram
 server <- function(input, output) {
-  output$tuition_scale_plot <- renderPlot({
-    ggplot(tuition_data, aes(x = income_range)) +
-      geom_point(aes(y = base_per_day), color = 'blue') +
-      geom_point(aes(y = base_per_day_4_year), color = 'green')
-  })
+  # output$tuition_scale_plot <- renderPlot({
+  #   ggplot(tuition_data, aes(x = income_range)) +
+  #     geom_point(aes(y = base_per_day), color = 'blue') +
+  #     geom_point(aes(y = base_per_day_4_year), color = 'green')
+  # })
 
   data_sets <- function() {
     list(
