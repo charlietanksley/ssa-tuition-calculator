@@ -1,0 +1,10 @@
+.plain-link {
+    color: #363636;
+}
+.plain-link:hover {
+    color: #3273dc;
+}
+
+.is-green {
+    color: #94b921;
+}
