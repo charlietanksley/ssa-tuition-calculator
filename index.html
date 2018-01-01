@@ -10,8 +10,11 @@
   <body>
     <div class="container">
       <h1 class="title has-text-centered">
-        Sudbury School of Atlanta Tuition Calculator
+        Monthly Tuition Calculator
       </h1>
+      <h2 class="subtitle has-text-centered">
+        Sudbury School of Atlanta
+      </h2>
 
       <div id="app" class="columns">
 
@@ -59,7 +62,26 @@
 
         <!-- Tuition info -->
         <div class="column">
-          <p>Your tuition is ${{ tuition }}</p>
+          <p>
+            <span class="is-size-1">${{ full_tuition }}</span>
+            <span class="is-size-5">
+              (Full tuition for {{ children_display }} attending {{ days_display }} per week.)
+            </span>
+          </p>
+
+          <p>
+            <span class="is-size-1">${{ tuition_assistance }}</span>
+            <span class="is-size-5">
+              (Tuition assistance for {{ children_display }} attending {{ days_display }} per week.)
+            </span>
+          </p>
+
+          <p>
+            <span class="is-size-1">${{ tuition }}</span>
+            <span class="is-size-5">
+              (You pay {{ children_display }} attending {{ days_display }} per week.)
+            </span>
+          </p>
         </div>
       </div>
     </div>

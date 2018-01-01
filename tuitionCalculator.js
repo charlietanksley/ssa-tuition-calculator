@@ -13,6 +13,17 @@ TuitionCalculator.prototype.calculate = function() {
                   this.convert_tuition_to_monthly.bind(this));
 }
 
+TuitionCalculator.prototype.calculate_family_tuition = function() {
+    var siblings = this.children - 1,
+        first_child = this.first_child_tuition(),
+        // Okay wow. So there is a bug here wherein the siblings are
+        // paying 1/2 of the base tuition (which can go over 8K per
+        // year). Or something. Somethign is still wrong here.
+        sibling_tuition = this.sibling_tuition() * siblings;
+
+    return first_child + sibling_tuition;
+}
+
 TuitionCalculator.prototype.capped_per_child_tuition = function() {
     var tuition = this.per_child_tuition(),
         tuition_cap = this.tuition_cap;
@@ -46,6 +57,10 @@ TuitionCalculator.prototype.first_child_tuition = function() {
     return this.capped_per_child_tuition();
 }
 
+TuitionCalculator.prototype.full_tuition = function() {
+    return this.family_tuition_cap() / 10;
+}
+
 TuitionCalculator.prototype.per_child_tuition = function() {
     return this.daily_tuition * this.days * this.multiplier;
 }
@@ -56,17 +71,6 @@ TuitionCalculator.prototype.sibling_tuition = function() {
 
 TuitionCalculator.prototype.scale_for_part_time = function(family_tuition) {
     return family_tuition * this.multiplier;
-}
-
-TuitionCalculator.prototype.calculate_family_tuition = function() {
-    var siblings = this.children - 1,
-        first_child = this.first_child_tuition(),
-        // Okay wow. So there is a bug here wherein the siblings are
-p        // paying 1/2 of the base tuition (which can go over 8K per
-        // year). Or something. Somethign is still wrong here.
-        sibling_tuition = this.sibling_tuition() * siblings;
-
-    return first_child + sibling_tuition;
 }
 
 TuitionCalculator.prototype.subtract_family_discount = function(family_tuition) {

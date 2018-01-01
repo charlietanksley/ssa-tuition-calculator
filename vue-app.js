@@ -95,6 +95,41 @@ var app = new Vue({
             }
         },
 
+        calculator: function() {
+            var per_day_tuition = this.base_tuition[this.income];
+            if (this.program === 'four-year') {
+                per_day_tuition = per_day_tuition * four_year_multiplier;
+            }
+
+            return new TuitionCalculator(
+                this.days,
+                per_day_tuition,
+                this.tuition_cap,
+                this.tuition_multiplier,
+                this.children
+            );
+        },
+
+        children_display: function() {
+            if (this.children === 1) {
+                return this.children + " child";
+            } else {
+                return this.children + " children";
+            }
+        },
+
+        days_display: function() {
+            if (this.days === 1) {
+                return this.days + " day";
+            } else {
+                return this.days + " days";
+            }
+        },
+
+        full_tuition: function() {
+            return this.calculator.full_tuition();
+        },
+
         incomes: function() {
             return Object.keys(this.base_tuition);
         },
@@ -116,20 +151,11 @@ var app = new Vue({
         },
 
         tuition: function() {
-            var per_day_tuition = this.base_tuition[this.income];
-            if (this.program === 'four-year') {
-                per_day_tuition = per_day_tuition * four_year_multiplier;
-            }
+            return this.calculator.tuition();
+        },
 
-            var calculator = new TuitionCalculator(
-                this.days,
-                per_day_tuition,
-                this.tuition_cap,
-                this.tuition_multiplier,
-                this.children
-            )
-
-            return calculator.tuition();
+        tuition_assistance: function() {
+            return this.full_tuition - this.tuition;
         }
     }
 });
