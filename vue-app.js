@@ -122,7 +122,12 @@ TuitionCalculator.prototype.subtract_family_discount = function(family_tuition) 
 
     // If there is only one child OR the family is already getting
     // tuition assistance, don't add in a sibling discount.
-    if (siblings === 0 || family_tuition !== family_tuition_cap) {
+    //
+    // So this is also a bug: we give the sibling discount *even if*
+    // they are getting tuition assistance.  Maybe that is good, but
+    // that isn't how I understood it before I started this rewrite.
+    //
+    if (siblings === 0) {// || family_tuition !== family_tuition_cap) {
         return family_tuition;
     }
 
@@ -130,13 +135,21 @@ TuitionCalculator.prototype.subtract_family_discount = function(family_tuition) 
     return family_tuition - discount;
 }
 
-TuitionCalculator.prototype.calculate_family_tuition = function(per_child_tuition) {
+TuitionCalculator.prototype.first_child_tuition = function() {
+    return this.capped_per_child_tuition() * this.multiplier;
+}
+
+TuitionCalculator.prototype.sibling_tuition = function() {
+    return (this.per_child_tuition() * this.multiplier )/ 2;
+}
+
+TuitionCalculator.prototype.calculate_family_tuition = function() {
     var siblings = this.children - 1,
-        first_child = per_child_tuition,
+        first_child = this.first_child_tuition(),
         // Okay wow. So there is a bug here wherein the siblings are
         // paying 1/2 of the base tuition (which can go over 8K per
         // year). Or something. Somethign is still wrong here.
-        sibling_tuition = per_child_tuition / 2 * siblings;
+        sibling_tuition = this.sibling_tuition() * siblings;
 
     return first_child + sibling_tuition;
 }
@@ -151,14 +164,13 @@ TuitionCalculator.prototype.convert_tuition_to_monthly = function(family_tuition
 
 TuitionCalculator.prototype.calculate = function() {
     return R.pipe(this.calculate_family_tuition.bind(this),
-                  this.scale_for_part_time.bind(this),
                   this.cap_tuition.bind(this),
                   this.subtract_family_discount.bind(this),
                   this.convert_tuition_to_monthly.bind(this));
 }
 
 TuitionCalculator.prototype.tuition = function() {
-    return this.calculate()(this.per_child_tuition());
+    return this.calculate()();
 }
 
 
