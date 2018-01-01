@@ -28,7 +28,7 @@ var base_tuition = {
 };
 
 var tuition_adjustments = {
-    'five_day': {
+    'five_plus': {
         1: {
             'tuition_cap': 2000,
             'percent_increase': 1.25
@@ -50,7 +50,7 @@ var tuition_adjustments = {
             'percent_increase': 1.00
         }
     },
-    'four_day': {
+    'four_year_old': {
         1: {
             'tuition_cap': 1540,
             'percent_increase': 1.4
@@ -74,6 +74,8 @@ var tuition_adjustments = {
     }
 };
 
+var four_year_multiplier = 0.688;
+
 var app = new Vue({
     el: '#app',
     data: {
@@ -81,10 +83,18 @@ var app = new Vue({
         children: 1,
         days: 5,
         income: '95,000 - 99,999',
-        four_year: false,
+        program: 'five-plus',
         tuition_adjustments: tuition_adjustments
     },
     computed: {
+        adjustment_key: function() {
+            if (this.program === 'four-year'){
+                return 'four_year_old';
+            } else {
+                return 'five_plus';
+            }
+        },
+
         incomes: function() {
             return Object.keys(this.base_tuition);
         },
@@ -94,8 +104,7 @@ var app = new Vue({
         },
 
         tuition_adjustment: function() {
-            // four year functions as a switch here.
-            return this.tuition_adjustments['five_day'][this.days];
+            return this.tuition_adjustments[this.adjustment_key][this.days];
         },
 
         tuition_cap: function() {
@@ -107,9 +116,14 @@ var app = new Vue({
         },
 
         tuition: function() {
+            var per_day_tuition = this.base_tuition[this.income];
+            if (this.program === 'four-year') {
+                per_day_tuition = per_day_tuition * four_year_multiplier;
+            }
+
             var calculator = new TuitionCalculator(
                 this.days,
-                this.base_tuition[this.income],
+                per_day_tuition,
                 this.tuition_cap,
                 this.tuition_multiplier,
                 this.children
