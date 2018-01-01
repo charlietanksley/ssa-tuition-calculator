@@ -86,7 +86,7 @@ function TuitionCalculator(days, daily_tuition, tuition_cap, multiplier, childre
 }
 
 TuitionCalculator.prototype.per_child_tuition = function() {
-    return this.daily_tuition * this.days;
+    return this.daily_tuition * this.days * this.multiplier;
 }
 
 TuitionCalculator.prototype.family_tuition_cap = function() {
@@ -131,16 +131,16 @@ TuitionCalculator.prototype.subtract_family_discount = function(family_tuition) 
         return family_tuition;
     }
 
-    discount = this.capped_per_child_tuition() * this.sibling_discount * siblings;
+    discount = this.sibling_tuition() * this.sibling_discount * siblings;
     return family_tuition - discount;
 }
 
 TuitionCalculator.prototype.first_child_tuition = function() {
-    return this.capped_per_child_tuition() * this.multiplier;
+    return this.capped_per_child_tuition();
 }
 
 TuitionCalculator.prototype.sibling_tuition = function() {
-    return (this.per_child_tuition() * this.multiplier )/ 2;
+    return this.per_child_tuition() / 2;
 }
 
 TuitionCalculator.prototype.calculate_family_tuition = function() {
