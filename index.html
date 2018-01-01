@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sudbury School of Atlanta Tuition Calculator</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title has-text-centered">
+        Sudbury School of Atlanta Tuition Calculator
+      </h1>
+
+      <div id="app" class="columns">
+
+        <!-- Navigation -->
+        <div class="column is-one-third">
+          <div class="field">
+            <label class="label">Income</label>
+            <div class="control">
+              <div class="select">
+                <select v-model="income">
+                  <option v-for="income in incomes">{{ income }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Number of days per week</label>
+            <div class="control">
+              <div class="select">
+                <select v-model="days">
+                  <option v-for="days in possible_days">{{ days }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Number of children</label>
+            <div class="control">
+              <input class="input" v-model="children">
+            </div>
+          </div>
+        </div>
+
+        <!-- Tuition info -->
+        <div class="column">
+          <p>Your tuition is ${{ tuition }}</p>
+        </div>
+      </div>
+    </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script src="./vue-app.js"></script>
+  </body>
+</html>
