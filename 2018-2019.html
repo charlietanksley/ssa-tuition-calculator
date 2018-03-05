@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>2018/2019 Sudbury School of Atlanta Tuition Calculator</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <section class="section">
+      <div class="container">
+        <h1 class="title has-text-centered">
+          2018/2019 Monthly Tuition Calculator
+        </h1>
+        <h2 class="subtitle has-text-centered">
+          <a href="http://sudburyschoolofatlanta.org/tuition/" class="plain-link">Sudbury School of Atlanta</a>
+        </h2>
+
+        <div id="app" class="columns">
+
+          <!-- Navigation -->
+          <div class="column is-one-third box">
+            <h2 class="is-size-2">Enter your information</h2>
+
+            <div class="field">
+              <label class="label">Net Income:</label>
+              <div class="control">
+                <div class="select">
+                  <select v-model="income">
+                    <option v-for="income in incomes">{{ income }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Days per week:</label>
+              <div class="control">
+                <div class="select">
+                  <select v-model="days">
+                    <option v-for="days in possible_days">{{ days }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Children in program:</label>
+              <div class="control">
+                <input class="input" v-model="children">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label"></label>
+              <input type="radio" id="five-plus" value="five-plus" v-model="program">
+              <label for="five-plus">5+ Years Old (9am - 3pm)</label>
+              <br>
+              <input type="radio" id="four-year" value="four-year" v-model="program">
+              <label for="four-year">4 Years Old (9am - 1pm)</label>
+              <br>
+            </div>
+          </div>
+
+          <!-- Tuition info -->
+          <div class="column is-4">
+            <h2 class="is-size-2">Base tuition</h2>
+            <p>
+              For {{ children_display }} attending Sudbury School of Atlanta {{ days_display }} per week, full monthly tuition is
+            </p>
+            <p class="has-text-centered is-size-2 is-green">
+              ${{ full_tuition }}
+            </p>
+
+          </div>
+
+          <div class="column is-4">
+            <h2 class="is-size-2">Your tuition</h2>
+            <p>
+              For {{ children_display }} attending Sudbury School of Atlanta {{ days_display }} per week, <em>your</em> monthly tuition is
+            </p>
+            <p class="has-text-centered is-size-2 is-green">
+              ${{ tuition }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ramda/0.20.1/ramda.min.js"></script>
+    <script src="./tuitionCalculator2018.js"></script>
+    <script src="./vue-app-2018.js"></script>
+  </body>
+</html>
