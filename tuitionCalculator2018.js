@@ -62,7 +62,8 @@ TuitionCalculator.prototype.full_yearly_tuition_single = function() {
         tuition,
         percent_increase,
         multiplier,
-        siblings;
+        siblings,
+        sibling_discount;
 
     // Adjust tuition for program and days
     adjustment = tuition_adjustments[this.program][this.days];
@@ -82,7 +83,12 @@ TuitionCalculator.prototype.full_yearly_tuition_single = function() {
     // Adjust for number of children
     siblings = this.children - 1;
     if (siblings > 0) {
-        tuition = tuition + (tuition * siblings * 0.5);
+        var default_discount = 0.5;
+        var income_difference = (this.income - 90) / 100;
+        sibling_discount = Math.max(0.5, default_discount + income_difference);
+
+        console.log(this.income, sibling_discount);
+        tuition = tuition + (tuition * siblings * sibling_discount);
     }
 
     return tuition;
